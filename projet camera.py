@@ -2,14 +2,14 @@ import cv2
 import numpy as np
 
 # Chemin vers l'image source
-image_path = 'p_1_2_9_129-thickbox_default-Maxi-Coca-15l.jpg'
+image_path = 'yuno_levi_jardin.jpg'
 
 # Lire l'image
 image = cv2.imread(image_path)
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 # Seuillage pour isoler l'objet
-_, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+_, thresh = cv2.threshold(gray, 75, 255, cv2.THRESH_BINARY)
 
 # Trouver les contours
 contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -27,7 +27,13 @@ object_only = cv2.bitwise_and(gray, gray, mask=mask)
 # Réduire l'objet isolé à 2 bits
 object_2bits = (object_only // 64) * 85
 
-# Afficher le résultat
-cv2.imshow('Objet Isolé sur 2 Bits', object_2bits)
+# Redimensionner l'image pour l'affichage
+# Définissez les nouvelles dimensions (largeur, hauteur)
+new_width = 800
+new_height = int((new_width / object_2bits.shape[1]) * object_2bits.shape[0])
+resized_image = cv2.resize(object_2bits, (new_width, new_height))
+
+# Afficher le résultat redimensionné
+cv2.imshow('Objet Isole sur 2 Bits - Redimensionne', resized_image)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
